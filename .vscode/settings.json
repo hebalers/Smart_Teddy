@@ -10,5 +10,5 @@
     ],
     "picowgo.syncFolder": "",
     "picowgo.openOnStart": true,
-    "picowgo.manualComDevice": "COM6"
+    "picowgo.manualComDevice": "COM3"
 }

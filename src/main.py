@@ -6,8 +6,15 @@ sensor = ADC(Pin(28, Pin.IN))
 
 print("Start")
 
+tresh = 1.4 #Treshold for attention algorithm  
+
 
 startTime = utime.ticks_ms()
+
+def Attention():
+     k = 2
+
+
 
 while(1):
     currentTime = utime.ticks_ms() - startTime
