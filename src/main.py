@@ -6,11 +6,12 @@ sensor = ADC(Pin(28, Pin.IN))
 
 print("Start")
 
-tresh = 1.4     #Treshold for attention algorithm  
-speed_t = 0     #Tail speed min,max(0,100)[%] 
-k = 0.005       #Variable for determing tail speed
+#Initialize variables
+tresh = 1.4                     #Treshold for attention algorithm  
+speed_t = 0                     #Tail speed min,max(0,100)[%] 
+k = 0.005                       #Variable for determing tail speed
+startTime = utime.ticks_ms()    #Start time 
 
-startTime = utime.ticks_ms()
 
 def Attention(voltage, speed_t):
     if voltage >= tresh:
@@ -28,14 +29,7 @@ def Attention(voltage, speed_t):
 
 while(1):
     currentTime = utime.ticks_ms() - startTime
-
     value = sensor.read_u16()
-
-    if value > 10000:
-        led.duty_u16(int(value/2))
-    else:
-        led.duty_u16(0)
-    
     voltage = (value/2**16) * 3.3
 
     print("Spanning", round(voltage, 2))
