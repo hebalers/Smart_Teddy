@@ -1,5 +1,4 @@
 from machine import Pin, ADC, PWM
-from servo import Servo
 import utime
 
 led = PWM(Pin(25, Pin.OUT))
