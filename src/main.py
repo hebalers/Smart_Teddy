@@ -30,7 +30,7 @@ SERVO_MAX = 8000
 deltaTime = 10 # Period of everyloop 
 
 sensor = ADC(Pin(FSR_PIN, Pin.IN))
-servo1 = Servo(SERVO_PIN=SERVO_PIN, SERVO_MIN=SERVO_MIN, SERVO_MAX=SERVO_MAX)
+servo1 = Servo(SERVO_PIN=SERVO_PIN, duty_0=SERVO_MIN, duty_180=SERVO_MAX)
 
 startTime = utime.ticks_ms()
 
