@@ -47,6 +47,14 @@ while(1):
     """""
     # --------        Read sensor       ---------------- 
 
+    # --------        Get servo speed       ---------------- 
+    # 0 -> 100 %
+    
+    # Max speed = 180 degree a sec
+    # servoSpeed = 180 * x
+    
+    # --------        Get servo speed       ---------------- 
+
     # --------        Servo control     ----------------     
     if(currentTime > oldServoTime + deltaServoTime):
         # Control servo speed in degree per second
