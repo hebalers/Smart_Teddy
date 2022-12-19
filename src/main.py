@@ -65,12 +65,12 @@ while(1):
         stepsize = servoSpeed*deltaServoTime*10**-3
         # Servo sweep from 0 to 180 degree
         if(servoDirection == 0):
-            servoPosition = servoPosition + stepsize
+            servoPosition += stepsize
             if(servoPosition >= 180):
                 servoPosition = 180
                 servoDirection = 1
         if(servoDirection == 1):
-            servoPosition = servoPosition - stepsize
+            servoPosition -= stepsize
             if(servoPosition <= 0):
                 servoPosition = 0
                 servoDirection = 0
