@@ -8,7 +8,7 @@ sensor = ADC(Pin(28, Pin.IN))
 tresh = 1                     #Treshold for attention algorithm  
 speed_t = 0                     #Tail speed min,max(0,100)[%] 
 k_h = 0.3                    #Variable for determing tail speed above treshold
-k_l = 0.009                     #Variable for determing tail speed below treshold
+k_l = 0.05                    #Variable for determing tail speed below treshold
 startTime = utime.ticks_ms()    #Start time 
 
 
@@ -33,11 +33,10 @@ while(1):
     
     value = sensor.read_u16()
     voltage = (value/2**16) * 3.3
-
-   
     speed_t = Attention(voltage,speed_t)
     print("Spanning", round(voltage, 1), "Tijd in ms", currentTime)
     print("Tail speed", int(speed_t))
+    led.duty_u16(int(speed_t*100))
 
     # --------        Read sensor       ---------------- 
 
