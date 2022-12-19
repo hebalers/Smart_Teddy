@@ -7,7 +7,7 @@ sensor = ADC(Pin(28, Pin.IN))
 #Initialize variables
 tresh = 1.4                     #Treshold for attention algorithm  
 speed_t = 0                     #Tail speed min,max(0,100)[%] 
-k = 0.005                       #Variable for determing tail speed
+k = 0.0005                       #Variable for determing tail speed
 startTime = utime.ticks_ms()    #Start time 
 
 
@@ -28,12 +28,12 @@ def Attention(voltage, speed_t):
 while(1):
     currentTime = utime.ticks_ms() - startTime
     # --------        Read sensor       ---------------- 
-    """""
+    
     value = sensor.read_u16()
     voltage = (value/2**16) * 3.3
+    speed_t = Attention(voltage,speed_t)
     print("Spanning", round(voltage, 1), "Tijd in ms", currentTime)
-    utime.sleep_ms(10)
-    """""
+    print("Tail speed", speed_t)
     # --------        Read sensor       ---------------- 
 
     # --------        Servo control     ---------------- 
