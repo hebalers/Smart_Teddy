@@ -14,25 +14,27 @@ class Servo():
         theta_max = int(180)
         dutyRange = self.duty_180 - self.duty_0
         # dutyRange = (2**16/20)
-
         dutycycle = int(theta/theta_max * dutyRange + self.duty_0)
         self.pwm.duty_u16(dutycycle)
         return self.pwm.duty_u16()
 
 
 FSR_PIN = 28
-
 SERVO_PIN = 15
-
 SERVO_MIN = 1800 
 SERVO_MAX = 8000
 
-deltaTime = 10 # Period of everyloop 
+deltaServoTime = 50 # Period of everyloop 
+servoSpeed = 100 # Topp speed is 90 degree a sec
+servoPosition = 0
+servoDirection = 0
 
 sensor = ADC(Pin(FSR_PIN, Pin.IN))
 servo1 = Servo(SERVO_PIN=SERVO_PIN, duty_0=SERVO_MIN, duty_180=SERVO_MAX)
 
 startTime = utime.ticks_ms()
+oldServoTime = 0
+i = deltaServoTime
 
 while(1):
     currentTime = utime.ticks_ms() - startTime
@@ -45,21 +47,39 @@ while(1):
     """""
     # --------        Read sensor       ---------------- 
 
-    # --------        Servo control     ---------------- 
-    for i in range(180):
-        servo1.posDegree(i)
-        print(i)
-        utime.sleep_ms(10)
-    for i in range(180):
-        x = 180 - i
-        servo1.posDegree(x)
-        print(x)
-        utime.sleep_ms(10)
-
-        
-        
-        
-
-    # --------        Servo control     ---------------- 
+    # --------        Get servo speed       ---------------- 
+    # 0 -> 100 %
     
-    utime.sleep_ms(deltaTime)
+    # Max speed = 180 degree a sec
+    # servoSpeed = 180 * x
+    
+    # --------        Get servo speed       ---------------- 
+
+    # --------        Servo control     ----------------     
+    if(currentTime > oldServoTime + deltaServoTime):
+        # Control servo speed in degree per second
+        # Max 180 degree min 0 degree
+        # Set servoposition
+        servo1.posDegree(servoPosition)
+        # Calculate stepsize acording to the speed
+        stepsize = servoSpeed*deltaServoTime*10**-3
+        # Servo sweep from 0 to 180 degree
+        if(servoDirection == 0):
+            servoPosition = servoPosition + stepsize
+            if(servoPosition >= 180):
+                servoPosition = 180
+                servoDirection = 1
+        if(servoDirection == 1):
+            servoPosition = servoPosition - stepsize
+            if(servoPosition <= 0):
+                servoPosition = 0
+                servoDirection = 0
+
+        oldServoTime = currentTime
+        
+        
+        
+        
+
+    # --------        Servo control     ---------------- 
+  
