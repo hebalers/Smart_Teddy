@@ -8,6 +8,8 @@ class Servo():
 
         self.duty_0  = duty_0
         self.duty_180 = duty_180
+        self.servoPosition = 0
+        self.servoDirection = 0
 
     def posDegree(self, theta):
         # Servo moves between a dutycycle of 1ms to 2ms with a period of 20ms (0 -> 180 degree)
@@ -17,7 +19,26 @@ class Servo():
         dutycycle = int(theta/theta_max * dutyRange + self.duty_0)
         self.pwm.duty_u16(dutycycle)
         return self.pwm.duty_u16()
-
+    
+    def sweep(self, speed, dt):
+        # Control servo speed in degree per second
+        # Max 180 degree min 0 degree
+        # Set servoposition
+        servo.posDegree(self.servoPosition)
+        # Calculate stepsize acording to the speed
+        stepsize = speed*dt
+        # Servo sweep from 0 to 180 degree
+        if(self.servoDirection == 0):
+            self.servoPosition += stepsize
+            if(self.servoPosition >= 180):
+                self.servoPosition = 180
+                self.servoDirection = 1
+                
+        if(self.servoDirection == 1):
+            self.servoPosition -= stepsize
+            if(self.servoPosition <= 0):
+                self.servoPosition = 0
+                self.servoDirection = 0
 
 FSR_PIN = 28
 SERVO_PIN = 15
@@ -26,11 +47,10 @@ SERVO_MAX = 8000
 
 deltaServoTime = 50 # Period of everyloop 
 servoSpeed = 100 # Topp speed is 90 degree a sec
-servoPosition = 0
-servoDirection = 0
+
 
 sensor = ADC(Pin(FSR_PIN, Pin.IN))
-servo1 = Servo(SERVO_PIN=SERVO_PIN, duty_0=SERVO_MIN, duty_180=SERVO_MAX)
+servo = Servo(SERVO_PIN=SERVO_PIN, duty_0=SERVO_MIN, duty_180=SERVO_MAX)
 
 startTime = utime.ticks_ms()
 oldServoTime = 0
@@ -52,34 +72,11 @@ while(1):
     
     # Max speed = 180 degree a sec
     # servoSpeed = 180 * x
-    
     # --------        Get servo speed       ---------------- 
 
     # --------        Servo control     ----------------     
     if(currentTime > oldServoTime + deltaServoTime):
-        # Control servo speed in degree per second
-        # Max 180 degree min 0 degree
-        # Set servoposition
-        servo1.posDegree(servoPosition)
-        # Calculate stepsize acording to the speed
-        stepsize = servoSpeed*deltaServoTime*10**-3
-        # Servo sweep from 0 to 180 degree
-        if(servoDirection == 0):
-            servoPosition = servoPosition + stepsize
-            if(servoPosition >= 180):
-                servoPosition = 180
-                servoDirection = 1
-        if(servoDirection == 1):
-            servoPosition = servoPosition - stepsize
-            if(servoPosition <= 0):
-                servoPosition = 0
-                servoDirection = 0
-
+        servo.sweep(servoSpeed, deltaServoTime*10**-3)
         oldServoTime = currentTime
-        
-        
-        
-        
-
     # --------        Servo control     ---------------- 
   
