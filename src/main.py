@@ -51,16 +51,13 @@ servoSpeed = 100 # Topp speed is 90 degree a sec
 
 sensor = ADC(Pin(FSR_PIN, Pin.IN))
 servo = Servo(SERVO_PIN=SERVO_PIN, duty_0=SERVO_MIN, duty_180=SERVO_MAX)
-
+oldServoTime = 0
 
 #Initialize variables
 tresh = 1                     #Treshold for attention algorithm  
 speed_t = 0                     #Tail speed min,max(0,100)[%] 
 k_h = 0.3                    #Variable for determing tail speed above treshold
 k_l = 0.05                    #Variable for determing tail speed below treshold
-startTime = utime.ticks_ms()    #Start time 
-
-
 
 def Attention(voltage, speed_t):
     if voltage >= tresh:
@@ -75,10 +72,9 @@ def Attention(voltage, speed_t):
             speed_t = 0
 
     return speed_t
-startTime = utime.ticks_ms()
-oldServoTime = 0
-i = deltaServoTime
 
+
+startTime = utime.ticks_ms()
 
 while(1):
     currentTime = utime.ticks_ms() - startTime
