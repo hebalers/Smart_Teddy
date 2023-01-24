@@ -69,6 +69,7 @@ class Attention():
 
  
 
+
 # --------        Global variables Servo       ----------------
 FSR_PIN = 28
 SERVO_PIN = 15
@@ -82,9 +83,9 @@ oldServoTime = 0
 
 
 # --------        Global variables Attention       ----------------
-TRESH = 1                       #Treshold for attention algorithm 
-K_H = 1                       #Variable for determing tail speed above treshold
-K_L = 0.5                      #Variable for determing tail speed below treshold 
+TRESH = 0.6                       #Treshold for attention algorithm 
+K_H = 5                    #Variable for determing tail speed above treshold
+K_L = 0.5                     #Variable for determing tail speed below treshold 
 SPEED_T = 0                     #Tail speed min,max(0,100)[%] 
 
 deltaAttentionTime = 50         # Period of everyloop
@@ -114,8 +115,8 @@ while(1):
     # --------        Servo control     ----------------     
     if(currentTime > oldServoTime + deltaServoTime):
         servo.sweep(servoSpeed, deltaServoTime*10**-3)
+        print(f"Servospeed {int(servoSpeed)} Voltage {attention.voltage}")
 
-        print(f"Servospeed {int(servoSpeed)}")
         oldServoTime = currentTime
     
-  
+
